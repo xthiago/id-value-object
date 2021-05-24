@@ -1,0 +1,49 @@
+{
+    "name": "xthiago/id",
+    "description": "A Value Object (VO) for Object Identity (ID). Includes a Doctrine DBAL type for persistence.",
+    "type": "library",
+    "require": {
+        "php": ">= 7.2",
+        "ramsey/uuid": "^4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "vimeo/psalm": "^4.7",
+        "doctrine/dbal": "^3.1",
+        "doctrine/coding-standard": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xthiago\\Id\\": "src/"
+        }
+    },
+    "suggest": {
+        "doctrine/dbal": "To persist the Id instances into a relational database"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Xthiago\\Id\\": [
+                "tests/integration/",
+                "tests/unit/"
+            ]
+        }
+    },
+    "scripts": {
+        "psalm": "psalm",
+        "phpcs": "phpcs",
+        "phpunit": "phpunit",
+        "ci": [
+            "@phpcs",
+            "@psalm",
+            "@phpunit"
+        ],
+        "fix-phpcs": "phpcbf"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thiago Rodrigues (xthiago)",
+            "email": "me@xthiago.com"
+        }
+    ]
+}
