@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ruleset name="Vuxx"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+    <description>A custom coding standard based on Doctrine and PSRs</description>
+
+    <arg name="colors" />
+    <arg value="s" />
+    <arg name="cache" value=".cache/.phpcs-cache" />
+
+    <config name="show_progress" value="1"/>
+    <config name="report_width" value="140" />
+
+    <rule ref="Doctrine" />
+
+    <file>./src</file>
+    <file>./tests</file>
+
+    <exclude-pattern>./vendor/*</exclude-pattern>
+
+    <!-- Allow tests to be named with snake_case pattern (improves readability) -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Removes vertical alignment of = operator in multi-line assignments -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="maxPadding" value="1"/>
+            <property name="ignoreMultiLine" value="true"/>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- This should be removed when the minimum PHP version for the project become >=7.4. -->
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
+        <exclude-pattern>*/src/*</exclude-pattern>
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+</ruleset>
