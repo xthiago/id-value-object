@@ -1,5 +1,5 @@
 {
-    "name": "xthiago/id",
+    "name": "xthiago/id-value-object",
     "description": "A Value Object (VO) for Object Identity (ID). Includes a Doctrine DBAL type for persistence.",
     "type": "library",
     "require": {
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Xthiago\\Id\\": "src/"
+            "Xthiago\\ValueObject\\Id\\": "src/"
         }
     },
     "suggest": {
@@ -22,7 +22,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Xthiago\\Id\\": [
+            "Xthiago\\ValueObject\\Id\\": [
                 "tests/integration/",
                 "tests/unit/"
             ]

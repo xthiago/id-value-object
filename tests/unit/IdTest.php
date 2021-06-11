@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xthiago\Id;
+namespace Xthiago\ValueObject\Id;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

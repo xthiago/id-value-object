@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Xthiago\Id\Persistence;
+namespace Xthiago\ValueObject\Id\Persistence;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Xthiago\Id\Id;
-use Xthiago\Id\Persistence\DoctrineDbalType as IdType;
+use Xthiago\ValueObject\Id\Id;
+use Xthiago\ValueObject\Id\Persistence\DoctrineDbalType as IdType;
 
 use function assert;
 

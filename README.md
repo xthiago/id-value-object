@@ -1,4 +1,4 @@
-# Id
+# Id Value Object
 
 PHP library to make working with object identity (ID) easier and fun!
 

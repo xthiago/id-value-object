@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Xthiago\Id\Persistence;
+namespace Xthiago\ValueObject\Id\Persistence;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
-use Xthiago\Id\Id;
+use Xthiago\ValueObject\Id\Id;
 
 use function is_string;
 use function strlen;
