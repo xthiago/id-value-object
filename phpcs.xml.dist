@@ -7,7 +7,7 @@
 
     <arg name="colors" />
     <arg value="s" />
-    <arg name="cache" value=".cache/.phpcs-cache" />
+<!--    <arg name="cache" value=".cache/.phpcs-cache" />-->
 
     <config name="show_progress" value="1"/>
     <config name="report_width" value="140" />
