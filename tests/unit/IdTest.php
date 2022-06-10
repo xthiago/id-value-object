@@ -7,6 +7,9 @@ namespace Xthiago\ValueObject\Id;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+use function json_encode;
+use function sprintf;
+
 class IdTest extends TestCase
 {
     /** @dataProvider validIdsEncodedAsString */
@@ -76,5 +79,17 @@ class IdTest extends TestCase
             ['-1', '1'],
             ['😁', '😀'],
         ];
+    }
+
+    public function test_jsonSerialize_should_return_the_string_representation(): void
+    {
+        $id = Id::generate();
+        $idEncodedAsString = $id->__toString();
+
+        $resultOfJsonSerializeMethod = $id->jsonSerialize();
+        $resultOfjsonEncodeFunction = json_encode($id);
+
+        self::assertSame($idEncodedAsString, $resultOfJsonSerializeMethod);
+        self::assertSame(sprintf('"%s"', $idEncodedAsString), $resultOfjsonEncodeFunction);
     }
 }

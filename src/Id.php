@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Xthiago\ValueObject\Id;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use Ramsey\Uuid\Uuid;
 
 use function strlen;
@@ -13,7 +14,7 @@ use function strlen;
  * @template T
  * @psalm-immutable
  */
-final class Id
+final class Id implements JsonSerializable
 {
     /** @var string */
     private $id;
@@ -56,5 +57,10 @@ final class Id
     public function isEqualTo(Id $id): bool
     {
         return $this->id === $id->id;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return $this->__toString();
     }
 }
