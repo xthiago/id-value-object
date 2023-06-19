@@ -92,11 +92,6 @@ class IdInterfaceNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsDenormalization('foo', \stdClass::class));
     }
 
-    public function atestSupportCustomAbstractUid()
-    {
-        $this->assertTrue($this->normalizer->supportsDenormalization('ccc', TestAbstractCustomUid::class));
-    }
-
     /**
      * @dataProvider dataProvider
      */
