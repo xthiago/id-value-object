@@ -172,6 +172,18 @@ class Product
 This library includes a class [`IdInterfaceNormalizer`](src/Serializer/Symfony/IdInterfaceNormalizer.php) able to 
 normalize and denormalize instances of `Id` value object.
 
+To use that normalizer, you need to pass it as an argument of `Serializer` class constructor:
+
+```php
+$serializer = new Serializer(
+    normalizers: [
+        new IdInterfaceNormalizer(), // <---
+        // others normalizers...
+    ],
+    encoders: [new JsonEncoder()]
+);
+```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
