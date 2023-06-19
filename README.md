@@ -184,6 +184,61 @@ $serializer = new Serializer(
 );
 ```
 
+### `FreezesUuidTrait` utility to help with tests
+
+When creating tests, we may want to know the value of the generated IDs beforehand. This lets us write more simpler 
+assertions. This library provides a trait [`FreezesUuidTrait`](src/Testing/FreezesUuidTrait.php) that could be used
+to freeze the uuid v4 generation or to set a known sequence.  
+
+```php
+class MyAwesomeTest extends Testcase
+{
+    use FreezesUuidTrait;
+    
+    protected function setUp(): void
+    {
+        // we could freeze the uuids here :)
+    }
+
+    protected function tearDown(): void
+    {
+        $this->unfreezeUuid(); // <-- This is important to unfreeze the uuid generation.
+    }
+    
+    public function test_fixed_uuid(): void
+    {
+        // Fixing the uuid value (this can also be set on `setUp()` method):
+        $this->freezeUuidV4WithFixedValue('866cc948-b6de-4cdc-8f5e-3b53a58a9f63');
+        
+        // All generated Id will have the same uuid value.
+        $this->assertSame('866cc948-b6de-4cdc-8f5e-3b53a58a9f63', (string) Id::generate());
+        $this->assertSame('866cc948-b6de-4cdc-8f5e-3b53a58a9f63', (string) Id::generate());
+        $this->assertSame('866cc948-b6de-4cdc-8f5e-3b53a58a9f63', (string) Id::generate());
+    }
+    
+    public function test_fixed_uuid_sequence(): void
+    {
+        // Fixing the uuid value with a known sequence:
+        $this->freezeUuidV4WithKnownSequence(
+            'e2d5d0fd-a719-4da7-976d-b5cd184fa615'
+            '4c98d212-19ed-4c41-9ea2-4b2d48d7410d'
+            '2acfaf05-25c3-4db9-9fea-5d71a0c3f909'
+        );
+        
+        // Each new Id instance will assume one uuid from the known sequence:
+        $this->assertSame('e2d5d0fd-a719-4da7-976d-b5cd184fa615', (string) Id::generate());
+        $this->assertSame('4c98d212-19ed-4c41-9ea2-4b2d48d7410d', (string) Id::generate());
+        $this->assertSame('2acfaf05-25c3-4db9-9fea-5d71a0c3f909', (string) Id::generate());
+        
+        // If we call again Id::generate(), it will throw RuntimeException because there is no remaining uuid in the 
+        // available list.
+        $this->assertException(RunTimeException::class);
+        Id::generate();
+        $this->fail('The expected exception was not thrown.');
+    }    
+}
+```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
