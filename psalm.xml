@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <psalm
-        errorLevel="1"
-        resolveFromConfigFile="true"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="https://getpsalm.org/schema/config"
-        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+        name="Psalm for Psalm"
+        errorLevel="1"
+        throwExceptionOnError="0"
+        findUnusedCode="false"
+        ensureArrayStringOffsetsExist="true"
+        ensureArrayIntOffsetsExist="true"
+        xsi:schemaLocation="vendor/vimeo/psalm/config.xsd"
+        limitMethodComplexity="true"
+        findUnusedPsalmSuppress="true"
+        findUnusedBaselineEntry="true"
 >
     <projectFiles>
         <directory name="src"/>

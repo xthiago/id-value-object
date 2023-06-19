@@ -24,7 +24,7 @@ This library requires PHP >= 7.2.
 Use [composer](https://getcomposer.org/) to install the library.
 
 ```bash
-composer install xthiago/id-value-object 
+composer install xthiago/id-value-object
 ```
 
 ### Doctrine
@@ -52,7 +52,7 @@ If you are using Symfony, you just need to edit the following the Doctrine confi
 doctrine:
   dbal:
     types:
-      xthiago_id: Xthiago\IdValueObject\Persistence\DoctrineDbalType
+      xthiago_id: Xthiago\ValueObject\Id\Persistence\DoctrineDbalType
 ```
 
 ## Usage
@@ -113,6 +113,57 @@ class Product
     {
         return $this->id();
     }
+}
+```
+### Creating custom ID classes
+
+Instead of rely on a generic `Id` class for all entities, you can create specific value objects for each entity.
+
+For example, give you have a `Product` entity, you can create a `ProductId` value object in the following way:
+
+```php
+class ProductId extends Id 
+{
+}
+```
+
+Then you will need to map this new type. You can just extend `DoctrineDbalType` in the following way:
+
+```php
+class ProductIdDbalType extends DoctrineDbalType
+{
+    public const NAME = 'product_id';
+
+    public function getConcreteIdClass(): string
+    {
+        return ProductId::class;
+    }
+}
+```
+
+Then you configure this new type (e.g. `Type::addType(ProductIdDbalType::NAME, ProductIdDbalType::class);`) and start
+using it in your model (this time I will show the mapping using PHP Attributes):
+
+```php
+<?php
+namespace YourApp;
+
+use Doctrine\ORM\Mapping as ORM;
+
+#[
+    ORM\Entity,
+    ORM\Table('product')
+]
+class Product
+{
+    public function __construct(
+        #[
+            ORM\Column(name: 'id', type: ProductIdDbalType::NAME),
+            ORM\Id
+        ]
+        private ProductId $id,
+    ) 
+    {}
 }
 ```
 

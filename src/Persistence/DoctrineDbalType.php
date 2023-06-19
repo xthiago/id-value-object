@@ -5,26 +5,44 @@ declare(strict_types=1);
 namespace Xthiago\ValueObject\Id\Persistence;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\GuidType;
+use Throwable;
 use Xthiago\ValueObject\Id\Id;
 
+use Xthiago\ValueObject\Id\IdInterface;
 use function is_string;
-use function strlen;
 
-class DoctrineDbalType extends StringType
+class DoctrineDbalType extends GuidType
 {
     public const NAME = 'xthiago_id';
 
     /**
      * {@inheritdoc}
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform): ?Id
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?IdInterface
     {
-        if (is_string($value) === false || strlen($value) === 0) {
+        $valueObjectClass = $this->getConcreteIdClass();
+
+        if ($value instanceof $valueObjectClass) {
+            return $value;
+        }
+
+        if (is_string($value) === false) {
             return null;
         }
 
-        return Id::fromString($value);
+        if ($value === '') {
+            return null;
+        }
+
+        try {
+            $id = $valueObjectClass::fromString($value);
+        } catch (Throwable $e) {
+            throw ConversionException::conversionFailed($value, self::NAME);
+        }
+
+        return $id;
     }
 
     /**
@@ -32,7 +50,7 @@ class DoctrineDbalType extends StringType
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if (! $value instanceof Id) {
+        if (! $value instanceof IdInterface) {
             return null;
         }
 
@@ -42,15 +60,23 @@ class DoctrineDbalType extends StringType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
-        return self::NAME;
+        return static::NAME;
+    }
+
+    /**
+     * @psalm-return class-string<IdInterface>
+     */
+    public function getConcreteIdClass(): string
+    {
+        return Id::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

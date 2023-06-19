@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Xthiago\ValueObject\Id\Id;
+use Xthiago\ValueObject\Id\IdInterface;
 use Xthiago\ValueObject\Id\Persistence\DoctrineDbalType as IdType;
 
 use function assert;
@@ -16,10 +17,19 @@ use function assert;
 class DoctrineDbalTypeTest extends TestCase
 {
     /** @var AbstractPlatform&MockObject */
-    private $platform;
+    protected $platform;
 
     /** @var Type  */
-    private $type;
+    protected $type;
+
+    /** @var string */
+    protected $typeName;
+
+    /**
+     * @var string
+     * @psalm-var class-string<IdInterface>
+     */
+    protected $valueObjectClass;
 
     public static function setUpBeforeClass(): void
     {
@@ -28,18 +38,24 @@ class DoctrineDbalTypeTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->platform = $this->aPlatform();
+        $this->type = Type::getType(IdType::NAME);
+        $this->valueObjectClass = Id::class;
+        $this->typeName = IdType::NAME;
+    }
+
+    protected function aPlatform(): AbstractPlatform
+    {
         $platform = $this->getMockBuilder(AbstractPlatform::class)
             ->addMethods([])
             ->getMockForAbstractClass();
-        assert($platform instanceof AbstractPlatform);
-        $this->platform = $platform;
 
-        $this->type = Type::getType(IdType::NAME);
+        return $platform;
     }
 
     public function test_call_convertToDatabaseValue_with_vo_value_should_return_id_encoded_as_string(): void
     {
-        $phpValue = Id::fromString('1');
+        $phpValue = $this->valueObjectClass::fromString('1');
 
         $databaseValue = $this->type->convertToDatabaseValue($phpValue, $this->platform);
 
@@ -60,7 +76,7 @@ class DoctrineDbalTypeTest extends TestCase
 
         $phpValue = $this->type->convertToPHPValue($databaseValue, $this->platform);
 
-        self::assertInstanceOf(Id::class, $phpValue);
+        self::assertInstanceOf($this->valueObjectClass, $phpValue);
         self::assertSame('11', (string) $phpValue);
     }
 
@@ -73,9 +89,18 @@ class DoctrineDbalTypeTest extends TestCase
         self::assertNull($phpValue);
     }
 
+    public function test_call_convertToPHPValue_with_a_vo_instance_as_value_must_return_the_given_vo(): void
+    {
+        $databaseValue = $this->valueObjectClass::fromString('11');
+
+        $phpValue = $this->type->convertToPHPValue($databaseValue, $this->platform);
+
+        self::assertEquals($this->valueObjectClass::fromString('11'), $phpValue);
+    }
+
     public function test_should_implement_some_methods_to_allow_structure_changes_to_be_detected_correctly(): void
     {
-        self::assertSame('xthiago_id', $this->type->getName());
+        self::assertSame($this->typeName, $this->type->getName());
         self::assertTrue($this->type->requiresSQLCommentHint($this->platform));
     }
 }
