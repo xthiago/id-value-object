@@ -15,6 +15,7 @@ use function is_string;
 
 class DoctrineDbalType extends GuidType
 {
+    /** @var string */
     public const NAME = 'xthiago_id';
 
     /**

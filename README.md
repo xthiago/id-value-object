@@ -167,6 +167,11 @@ class Product
 }
 ```
 
+### Symfony Serializer
+
+This library includes a class [`IdInterfaceNormalizer`](src/Serializer/Symfony/IdInterfaceNormalizer.php) able to 
+normalize and denormalize instances of `Id` value object.
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
